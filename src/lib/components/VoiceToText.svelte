@@ -1,35 +1,25 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
+
 	import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 	import { transcriptStore } from '$lib/stores/transcript'; // Current transcript data that other modules and components will use
-	import { listening } from '$lib/stores/states'; // The state of the AI agent $listening or speaking
-	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
-	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import type { DrawerSettings, DrawerStore } from '@skeletonlabs/skeleton';
-
+	import { listening } from '$lib/stores/states'; // The state of the AI agent listening or speaking
+	import { isOpen, calling } from '$lib/stores/states'; // State of deepgram API WS connection
+	import { characterStore } from '$lib/stores/character'; // Current character
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
 
+	let circleStyle = 'width: 100px; height: 100px; border-radius: 50%; background-color: red;';
+
 	let connection;
-	let isRecording = false;
 	let mediaRecorder;
 	//let audioChunks = []; // Array to store audio data chunks to play in case of audio quality issues
 
-	const startRecording = async () => {
+	const startCall = async () => {
 		// Get mic permission and start recording
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		mediaRecorder = new MediaRecorder(stream);
+		let mediaRecorder = new MediaRecorder(stream);
 		mediaRecorder.start(1500); // Trigger dataavailable event every 1000 milliseconds
-		// Create a queue to store audio data chunks until the connection is open
-
-		mediaRecorder.addEventListener('dataavailable', (event) => {
-			// Add the audio data to the queue
-			if ($isOpen) {
-				console.log('sending data');
-				connection.send(event.data);
-				const sendTime = new Date().getTime();
-			}
-			//audioChunks.push(event.data); // Collect audio data chunks
-		});
 
 		// Create a live transcription connection
 		connection = deepgram.listen.live({
@@ -61,7 +51,17 @@
 			$transcriptStore = [];
 		});
 
-		// When the deep server responds with our results
+		mediaRecorder.addEventListener('dataavailable', (event) => {
+			// Add the audio data to the queue
+			if ($isOpen) {
+				console.log('sending data');
+				connection.send(event.data);
+				const sendTime = new Date().getTime();
+			}
+			//audioChunks.push(event.data); // Collect audio data chunks
+		});
+
+		// When the deepGram server responds with our results
 		connection.on(LiveTranscriptionEvents.Transcript, (data) => {
 			$listening = true;
 			// If the transcript data is not intermediate results, insert to the store array
@@ -71,13 +71,11 @@
 		});
 	};
 
-	const stopRecording = async () => {
+	const stopCall = async () => {
+		console.log('stoping by change value');
+
+		connection.finish();
 		mediaRecorder.stop();
-		// Close the connection
-		if (connection) {
-			console.log('connection closed sent');
-			connection.finish();
-		}
 
 		/* Audio tester functionality
 		// Create a Blob from the collected audio data chunks
@@ -96,23 +94,30 @@
 		}); */
 	};
 
-	const toggleRecording = async () => {
-		isRecording = !isRecording;
-
-		if (isRecording) {
-			// Start recording
-			await startRecording();
+	// Function to execute when the store's value changes
+	const callToggle = (value) => {
+		if (value = true) {
+			console.log('starting by change value');
+			startCall();
 		} else {
-			// Stop recording
-			await stopRecording();
+			stopCall();
 		}
 	};
+	// Subscribe to the calling store
+	const unsubscribe = calling.subscribe(callToggle);
+	// Unsubscribe when the component is destroyed
+	onDestroy(unsubscribe);
 </script>
 
-<button on:click={toggleRecording}>
-	{#if isRecording}
-		Stop Recording
-	{:else}
-		Start Recording
-	{/if}
-</button>
+<div class="flex flex-col items-center justify-center h-full">
+	<div style={circleStyle}></div>
+	<br />
+	<div class="card variant-ghost-success shadow-md rounded p-4 w-full max-w-md">
+		<p class="text-xl font-semibold">{$characterStore.fullName}</p>
+		<p class="text-lg">Age: {$characterStore.age}</p>
+		<p class="text-lg">Role: {$characterStore.role}</p>
+		<p class="text-lg">Company: {$characterStore.company}</p>
+		<p class="text-lg">Location: {$characterStore.location}</p>
+		<p class="text-lg">Employees: {$characterStore.employees}</p>
+	</div>
+</div>

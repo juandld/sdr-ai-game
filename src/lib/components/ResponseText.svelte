@@ -1,12 +1,14 @@
-<script>
+<script lang="ts">
 	import { transcriptStore } from '$lib/stores/transcript';
 	import { listening } from '$lib/stores/states';
 	import { isOpen } from '$lib/stores/states';
 	import { characterStore } from "$lib/stores/character";
+	import { InMemoryStore } from 'langchain/storage/in_memory';
+
 
 	import {spawnCharacter} from '$lib/prompts/convo'
 
-	let response; // Dclaring final response top level to export later.
+	let response: string; // Dclaring final response top level to export later.
 
 	// Things that happen once every conversation
 	export const prepareConvo = async () => {

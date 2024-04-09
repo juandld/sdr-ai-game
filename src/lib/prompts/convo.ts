@@ -2,7 +2,6 @@ import { SystemMessagePromptTemplate, AIMessagePromptTemplate } from "@langchain
 import { genCalls } from '$lib/chains/dynamicCall';
 
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { InMemoryStore } from 'langchain/storage/in_memory';
 
 const conversationTemplates = {
     "identifyPhase": `

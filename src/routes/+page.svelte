@@ -1,13 +1,5 @@
 <script lang="ts">
-	import VoiceToText from '$lib/components/VoiceToText.svelte';
-	import ResponseText from '$lib/components/ResponseText.svelte';
-	import { characterStore } from '$lib/stores/character';
-	import { templates } from '$lib/prompts/characterTemplates';
-
-	const startCall = (character) => {
-		$characterStore = character
-
-	}
+	import CallButton from '$lib/components/CallButton.svelte';
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
@@ -28,20 +20,7 @@
 				<p>⚠️ After you click on a level to call, make sure to enable your microphone.</p>
 			</div>
 		</aside>
-
-		<div class="w-100 text-token card p-4 space-y-4">
-			<dl class="list-dl">
-					{#each Object.entries(templates) as [key], index}
-						<div>
-							<span class="flex-auto"
-								><dt class="font-bold">Level {index +1 } {key}</dt>
-								<dd class="text-sm opacity-50">{templates[key].role} in {templates[key].company} </dd>
-							</span> <button class="btn variant-filled" on:click={startCall(templates[key])}>Call</button
-							>
-						</div>
-					{/each}
-			</dl>
-		</div>
+		<CallButton/>
 		<br>
 	</div>
 </div>

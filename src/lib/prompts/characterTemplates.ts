@@ -2,12 +2,12 @@ export const templates = {
     Mary: {
         fullName: "Mary Johnson",
         age: "55",
-        role: "business owner",
+        role: "Small business owner",
         company: "Johnson Health Insurance Inc.",
         location: "Cleveland, Ohio",
         circumstance: "while in the middle of reviewing a client's insurance policy",
         passing_percentage: 25,
-        employees: 100
+        employees: 30
     },
     John: {
         fullName: "John Smith",
@@ -17,7 +17,7 @@ export const templates = {
         location: "Austin, Texas",
         circumstance: "while restocking the storefront",
         passingPercentage: 35,
-        employees: 150
+        employees: 100
     },
     Samantha: {
         fullName: "Samantha White",
