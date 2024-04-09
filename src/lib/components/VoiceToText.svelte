@@ -96,17 +96,13 @@
 
 	// Function to execute when the store's value changes
 	const callToggle = (value) => {
-		if (value = true) {
+		if ((value = true)) {
 			console.log('starting by change value');
 			startCall();
 		} else {
 			stopCall();
 		}
 	};
-	// Subscribe to the calling store
-	const unsubscribe = calling.subscribe(callToggle);
-	// Unsubscribe when the component is destroyed
-	onDestroy(unsubscribe);
 </script>
 
 <div class="flex flex-col items-center justify-center h-full">

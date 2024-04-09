@@ -8,16 +8,9 @@
 
 	initializeStores();
 	//Make sure call ends when Drawer is closed
-	function handleStoreChange(value) {
-		if(value.open){
-			$calling = true;
-		} else {
-			$calling = false;
-		}
-	}
+
 	const drawerStore = getDrawerStore();
-	const unsubscribe = drawerStore.subscribe(handleStoreChange);
-	onDestroy(unsubscribe)
+
 </script>
 
 <Drawer position='right'>

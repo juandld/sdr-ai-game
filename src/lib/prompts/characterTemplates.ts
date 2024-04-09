@@ -1,4 +1,7 @@
-export const templates = {
+import type { Character } from '$lib/interfaces/Character';
+
+
+export const templates: Record<string, Character>  = {
     Mary: {
         fullName: "Mary Johnson",
         age: "55",
