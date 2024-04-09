@@ -2,7 +2,7 @@
 	import '../app.postcss';
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import VoiceToText from '$lib/components/VoiceToText.svelte'
+	import DialPad from '$lib/components/DialPad.svelte'
 	import {calling} from '$lib/stores/states'; 
 	import { onDestroy } from 'svelte';
 
@@ -15,7 +15,7 @@
 
 <Drawer position='right'>
 	{#if $drawerStore.id === 'example-1'}
-		<VoiceToText/>
+		<DialPad/>
 	{/if}
 </Drawer>
 <slot/>
