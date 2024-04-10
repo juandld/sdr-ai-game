@@ -5,6 +5,7 @@
 	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
 	import { characterStore } from '$lib/stores/character'; // Current character
 	import SoundCircles from './SoundCircles.svelte';
+	import ResponseText from './ResponseText.svelte';
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
 
@@ -24,7 +25,7 @@
 			model: 'nova-2',
 			language: 'en-US',
 			smart_format: true,
-			utterance_end_ms: 1000, // Working on detecting end of speach to make a response in real time call
+			utterance_end_ms: 1200, // Working on detecting end of speach to make a response in real time call
 			interim_results: true // Interim results have to be enabled to use uterrenceEnd.
 		});
 
@@ -46,7 +47,8 @@
 		connection.on(LiveTranscriptionEvents.UtteranceEnd, () => {
 			$listening = false;
 			console.log($transcriptStore);
-			$transcriptStore = [];
+			
+			$transcriptStore = {};
 		});
 
 		mediaRecorder.addEventListener('dataavailable', (event) => {
@@ -64,7 +66,12 @@
 			$listening = true;
 			// If the transcript data is not intermediate results, insert to the store array
 			if (data.is_final && data.channel.alternatives[0].transcript !== '') {
-				$transcriptStore.push(data.channel.alternatives[0].transcript);
+				let concatenatedTranscript = data.channel.alternatives
+					.map((alt) => alt.transcript)
+					.join(' ');
+
+				// Create the object with the concatenated string
+				$transcriptStore = { input: concatenatedTranscript };
 			}
 		});
 	};
@@ -110,6 +117,9 @@
 </script>
 
 <div class="flex flex-col items-center justify-center h-full">
+	<div>
+		<ResponseText />
+	</div>
 	<div class="flex">
 		{#if $isOpen}
 			<SoundCircles {stream} />

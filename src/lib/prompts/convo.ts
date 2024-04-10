@@ -1,8 +1,17 @@
 import { SystemMessagePromptTemplate, AIMessagePromptTemplate } from "@langchain/core/prompts";
 import { genCalls } from '$lib/chains/dynamicCall';
+import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
+import { ChatOpenAI } from "@langchain/openai";
+import { ConversationChain } from "langchain/chains";
+import { BufferMemory, ChatMessageHistory } from "langchain/memory";
+import type { Character } from "$lib/interfaces/Character";
 
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+const chatLlm = new ChatOpenAI({
+    temperature: 0.4,
+    openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
+});
 
+// Standard step templates
 const conversationTemplates = {
     "identifyPhase": `
     You are in a phone call and you recieve this message: {input0}
@@ -16,7 +25,7 @@ const conversationTemplates = {
     7.closing" 
     What stage is the conversation on? respond only with the number and nothing more
     `,
-    "resolveCohesion":`
+    "resolveCohesion": `
     hi, how are you? {input0}
     `
 
@@ -36,23 +45,36 @@ const qualificationTemplates = {
 const decisionCalls = genCalls(conversationTemplates);
 const qualifications = genCalls(qualificationTemplates);
 
+//Template objects to inject
 const aimessageTemplate = AIMessagePromptTemplate.fromTemplate("hello?")
-const systemMessageTemplate = SystemMessagePromptTemplate.fromTemplate(`You are {name},
+const systemMessageTemplate = SystemMessagePromptTemplate.fromTemplate(`You are {fullName},
     a {age}-year-old {role} of {company} from {location} You have just received an unexpected
-    call from an unknown number {circumstance}, a Sales Development Representative (SDR) from
-    CIENCE Technologies, and will try to get you to book a meeting. 
-    Navigate this conversation focusing on your company goals and personal interests,
-    showing skepticism, curiosity, or interest based on the SDR's performance`
+    call from an unknown number {circumstance}, DO NOT BREAK CHARACTER FOR ANY REASON, DO NOT ANSWER UNRELATED QUESTIONS`
 )
 
 const chatTemplate = ChatPromptTemplate.fromMessages([
-    systemMessageTemplate,
-    aimessageTemplate
-]);
+    new MessagesPlaceholder("history"),
+    aimessageTemplate,
+    ["human", "{input}"],
+]); 
 
-export const spawnCharacter = async (characterStore) => {
 
-    const messages = await chatTemplate.formatMessages({characterStore});
-    return messages
-}
+
+// Form main chat with system and initial messages
+export const characterChat = async (characterStore:Character, transcriptStore) => {
+
+    const inception = await systemMessageTemplate.invoke(characterStore)
+
+    const chain = new ConversationChain({
+        memory: new BufferMemory({ returnMessages: true, memoryKey: "history", chatHistory: new ChatMessageHistory(inception) }),
+        prompt: chatTemplate,
+        llm: chatLlm,
+    });
+    
+    console.log(transcriptStore);
+    
+    const results = await chain.invoke(transcriptStore)    
+
+    return results.response
+};
 
