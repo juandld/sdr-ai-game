@@ -1,24 +1,22 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-
 	import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 	import { transcriptStore } from '$lib/stores/transcript'; // Current transcript data that other modules and components will use
 	import { listening } from '$lib/stores/states'; // The state of the AI agent listening or speaking
-	import { isOpen, calling } from '$lib/stores/states'; // State of deepgram API WS connection
+	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
 	import { characterStore } from '$lib/stores/character'; // Current character
+	import SoundCircles from './SoundCircles.svelte';
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
 
-	let circleStyle = 'width: 100px; height: 100px; border-radius: 50%; background-color: red;';
-
-	let connection;
+	let connection: any;
 	let mediaRecorder;
+	let stream;
 	//let audioChunks = []; // Array to store audio data chunks to play in case of audio quality issues
 
 	const startCall = async () => {
 		// Get mic permission and start recording
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		let mediaRecorder = new MediaRecorder(stream);
+		stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		mediaRecorder = new MediaRecorder(stream);
 		mediaRecorder.start(1500); // Trigger dataavailable event every 1000 milliseconds
 
 		// Create a live transcription connection
@@ -77,6 +75,12 @@
 		connection.finish();
 		mediaRecorder.stop();
 
+		// Stop each track in the stream
+		stream.getTracks().forEach((track) => {
+			track.stop();
+			track.enabled = false;
+		});
+
 		/* Audio tester functionality
 		// Create a Blob from the collected audio data chunks
 		const blob = new Blob(audioChunks, { type: 'audio/webm' });
@@ -96,28 +100,42 @@
 
 	// Function to execute when the store's value changes
 	const callToggle = (value) => {
-		if (value = true) {
+		if (!value) {
 			console.log('starting by change value');
 			startCall();
 		} else {
 			stopCall();
 		}
 	};
-	// Subscribe to the calling store
-	const unsubscribe = calling.subscribe(callToggle);
-	// Unsubscribe when the component is destroyed
-	onDestroy(unsubscribe);
 </script>
 
 <div class="flex flex-col items-center justify-center h-full">
-	<div style={circleStyle}></div>
+	<div class="flex">
+		{#if $isOpen}
+			<SoundCircles {stream} />
+		{/if}
+	</div>
 	<br />
-	<div class="card variant-ghost-success shadow-md rounded p-4 w-full max-w-md">
+	<div class="card variant-ghost-success shadow-md rounded p-4 w-[90%]">
 		<p class="text-xl font-semibold">{$characterStore.fullName}</p>
 		<p class="text-lg">Age: {$characterStore.age}</p>
 		<p class="text-lg">Role: {$characterStore.role}</p>
 		<p class="text-lg">Company: {$characterStore.company}</p>
 		<p class="text-lg">Location: {$characterStore.location}</p>
 		<p class="text-lg">Employees: {$characterStore.employees}</p>
+	</div>
+	<br />
+	<div>
+		{#if $isOpen}
+			<!-- svelte-ignore a11y-invalid-attribute -->
+			<a href="#" on:click|preventDefault={() => callToggle($isOpen)}>
+				<img src="./hang.png" alt="callButton" />
+			</a>
+		{:else}
+			<!-- svelte-ignore a11y-invalid-attribute -->
+			<a href="#" on:click|preventDefault={() => callToggle($isOpen)}>
+				<img src="./call.png" alt="callButton" />
+			</a>
+		{/if}
 	</div>
 </div>

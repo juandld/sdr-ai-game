@@ -8,3 +8,5 @@ export interface Character {
     passing_percentage: number;
     employees: number;
 }
+
+export type CharacterTemplates = Record<string, Character>;
