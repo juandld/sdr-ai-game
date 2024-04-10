@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 export class AudioAnimationTools {
     audioContext: AudioContext;
     analyser: AnalyserNode;
@@ -7,6 +9,9 @@ export class AudioAnimationTools {
     isAnimating: boolean = false; // Extra boolean property to control animating state
     circleStyle: string; // To make the circleStyle accessible outside the class
     animationId: number; // To keep track of the animationId for cancellation
+
+    circleStyleChanger = writable(''); // create a new Svelte store specific to this instance
+
 
     constructor(stream: MediaStream) {
         this.audioContext = new AudioContext();
@@ -30,17 +35,26 @@ export class AudioAnimationTools {
         const amplitude = this.getAverageAmplitude(); 
         const targetSize = 5 * (20 + 80 * (amplitude / 128));
 
-        const lerpSpeed = 0.05;
+        const lerpSpeed = 0.01; // Slower lerp speed for smoother transition
         const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
         let currentSize = 100;
         currentSize = lerp(currentSize, targetSize, lerpSpeed);
 
-        this.circleStyle = `width: ${(currentSize - 250) * 2}px; height: ${(currentSize - 250) * 2}px;`;
+        // scale currentSize to be in range 0 - 1
+        const currentSizeNorm = (currentSize - 99.2) / 0.2;
+
+        // scale normalized currentSize to be in range 20% - 100% 
+        const scaledSize = currentSizeNorm * 90 + 20;
+
+        this.circleStyle = `width: ${scaledSize}px; height: ${scaledSize}px;`;
+        this.circleStyleChanger.set(this.circleStyle); // update the instance's Svelte store
         this.animationId = requestAnimationFrame(() => this.updateCircle());
     }
 
+    
+
     getCircleStyle() {
-        return this.circleStyle;
+        return this.circleStyleChanger;        
     }
 
     stop() {

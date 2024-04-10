@@ -1,11 +1,13 @@
 <script lang="ts">
     import { AudioAnimationTools } from '$lib/util/audioAnimation'; 
-    import { onMount } from 'svelte';
-    import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
+    import { onMount, onDestroy } from 'svelte';
+    import { isOpen } from '$lib/stores/states'; 
 
     export let stream;
+
     let circleStyle = ``;
-    let tools: AudioAnimationTools | undefined; // Explicitly type tools
+    let tools: AudioAnimationTools | undefined;
+    let circleStyleStoreUnsubscription: () => void | undefined; 
 
     onMount(() => {
         tools = new AudioAnimationTools(stream);
@@ -18,12 +20,23 @@
         }
     });
     
-    // Reactive statement to update circleStyle
     $: if (tools) {
-        console.log(`${tools.getCircleStyle() || ''}`);
-        
-        circleStyle = `border: 2px solid red; background-color: transparent; border-radius: 50%; ${tools.getCircleStyle() || ''}`;
+        if (circleStyleStoreUnsubscription) {
+            // If the function already exists, unsubscribe to the previous circleStyleChanger store
+            circleStyleStoreUnsubscription();
+        }
+        circleStyleStoreUnsubscription = tools.getCircleStyle().subscribe(value => {
+            circleStyle = `border: 2px solid red; background-color: transparent; border-radius: 50%; ${value || ''}`;
+            console.log(circleStyle);
+        });
     }
+
+    onDestroy(() => {
+        if (circleStyleStoreUnsubscription) {
+            // If the function exists, unsubscribe to the circleStyleChanger store
+            circleStyleStoreUnsubscription();
+        }
+    });
 </script>
 
 <div>
