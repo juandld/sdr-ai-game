@@ -27,7 +27,6 @@
         }
         circleStyleStoreUnsubscription = tools.getCircleStyle().subscribe(value => {
             circleStyle = `border: 2px solid red; background-color: transparent; border-radius: 50%; ${value || ''}`;
-            console.log(circleStyle);
         });
     }
 
