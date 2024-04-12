@@ -1,5 +1,6 @@
 <script>
     import { characterStore } from '$lib/stores/character';
+    import { convoStore } from '$lib/stores/transcript';
 
     let text;
 

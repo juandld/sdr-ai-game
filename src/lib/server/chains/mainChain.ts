@@ -13,6 +13,7 @@ import type { Character } from "$lib/interfaces/Character";
 // Core imports
 import { genCalls } from '$lib/server/chains/dynamicCall';
 import { conversationTemplates } from '$lib/server/prompts/mainPrompts'
+import { json } from "@sveltejs/kit";
 
 const chatLlm = new ChatOpenAI({
     temperature: 0.4,
@@ -49,9 +50,8 @@ export const mainConvo = async (characterStore:Character) => {
     });
 
     // Cohesion assesment, always before deciding to say 'what?'
-    const chatHistoryString = JSON.stringify(await chatHistory.getMessages());
-    
-    const cohensionResult = await decisionCalls['resolveCohesion']({ chatHistory: JSON.stringify(chatHistoryString), input0: });
+    const chatHistoryMessages = await chatHistory.getMessages();
+    const cohensionResult = await decisionCalls['resolveCohesion']({ input0: JSON.stringify(chatHistoryMessages)});
     const firstResponse = "Cant hear you, maybe try again later? Bye"
     if (cohensionResult) {
         const firstResponse = await mainChain.invoke({input: "hello, this mary?"});
