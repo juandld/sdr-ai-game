@@ -26,4 +26,4 @@ export const genCalls = (templates: { [key: string]: string }) => {
     }
   
     return calls;
-  }
+}

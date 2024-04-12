@@ -4,6 +4,8 @@
 	import { listening } from '$lib/stores/states'; // The state of the AI agent listening or speaking
 	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
 	import { characterStore } from '$lib/stores/character'; // Current character
+    import { convoStore } from '$lib/stores/transcript';
+
 	import SoundCircles from './SoundCircles.svelte';
 	import ResponseText from './ResponseText.svelte';
 
@@ -45,9 +47,7 @@
 		});
 
 		connection.on(LiveTranscriptionEvents.UtteranceEnd, () => {
-			$listening = false;
-			console.log($transcriptStore);
-			
+			$listening = false;			
 			$transcriptStore = {};
 		});
 

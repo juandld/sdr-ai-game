@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { mainConvo } from '$lib/server/chains/mainChain';
 
-export async function POST({request, cookies}) {
+export async function POST({request}) {
     // Extract character data from the request body
     const data = await request.json();
     console.log(data);
@@ -10,5 +10,5 @@ export async function POST({request, cookies}) {
     let result = await mainConvo(data);
 
     // Return the result as JSON
-    return json(result);
+    return json({result:result});
 }

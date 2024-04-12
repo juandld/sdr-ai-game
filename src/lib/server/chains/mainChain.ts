@@ -35,9 +35,9 @@ const chatTemplate = ChatPromptTemplate.fromMessages([
 ]); 
 
 // Main function set
-export const mainConvo = async (characterStore:Character) => {
+export const mainConvo = async (data) => {
     
-    const inception = await systemMessageTemplate.invoke(characterStore)
+    const inception = await systemMessageTemplate.invoke(data.character)
 
     // Main chat save
     const chatHistory = new ChatMessageHistory(inception);
