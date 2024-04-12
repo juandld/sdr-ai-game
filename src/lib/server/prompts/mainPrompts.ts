@@ -1,9 +1,15 @@
 
 // Standard step templates
-const conversationTemplates = {
+export const conversationTemplates = {
     "identifyCurrentPhase": `
+Based on this conversation: {chatHistory}
+
+---
+
+Use this guide to decide what phase this conversation is currently on, you will recieve the full conversation, you can also go off of the length of the conversation to determine a phase, these phases usually are sequential.
+
 1. Introduction: The salesperson begins the phone call by quickly introducing themselves and their company. They briefly explain why they're calling, ensuring to mention that this call isn't unsolicited. 
-Example: Upon receiving {input0}, the salesperson promptly introduces themselves, stating "Hello, I'm salesperson from ABC solutions. I'm not intruding, am I?".
+Example: "Prospect": "Hello?", "Salesperson": "Hi, is this Jason?", "Prospect": "Yes, how can i help you?".
 2.Validation: The salesperson validates the prospect by acknowledging their pain points or existing knowledge of the product/service. They aim to strike a chord and establish resonance.
 Example: salesperson validates by saying, "I understand running a business can face challenges, especially in the area of data management, isn't that right?".
 3.Qualification: The salesperson probes deeper, asking questions to qualify the prospect's need for the product/service. They get a better understanding of the prospect's situation.
@@ -16,14 +22,16 @@ Example: When objections arise, salesperson reassures, "I understand your concer
 Example: To secure commitment, salesperson confirms, "So, could we set up the demo for this Thursday at 2PM, would that work for you?".
 7.Closing: The salesperson concludes the call by thanking the prospect for their time, and confirming the details of the next engagement.
 Example: As a closing remark, salesperson expresses gratitude and reassures the commitment by stating, "Thank you for your time. I've added the demo appointment to our calendars for this Thursday at 2PM. Looking forward to connecting with you then".
-    `,
+    
+---
 
+respond only with a short reasoning and the number at the end
+`,
     "resolveCohesion": `
-    hi, how are you? {input0}
-    `
+    hi, how are you? {input0} ` 
 }
 
-const qualificationTemplates = {
+export const qualificationTemplates = {
     "intro": ``,
     "validation": ``,
     "qualification": ``,

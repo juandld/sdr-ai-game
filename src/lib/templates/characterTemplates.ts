@@ -19,9 +19,9 @@ export const templates: Record<string, Character>  = {
         company: "Altech Gadget Store",
         location: "Austin, Texas",
         circumstance: "while restocking the storefront",
-        passingPercentage: 35,
+        passing_percentage: 35,
         employees: 100
-    },
+    }/* ,
     Samantha: {
         fullName: "Samantha White",
         age: "40",
@@ -69,7 +69,7 @@ export const templates: Record<string, Character>  = {
         company: "Starshine Cosmetics",
         location: "Los Angeles, California",
         circumstance: "while overseeing a product photoshoot",
-        passingPercentage: 80,
+        passing_percentage: 80,
         employees: 1000
     },
     Frank: {
@@ -99,7 +99,7 @@ export const templates: Record<string, Character>  = {
         company: "TechWorld Innovations",
         location: "San Francisco, California",
         circumstance: "while at a tech innovation summit",
-        passingPercentage: 95,
+        passing_percentage: 95,
         employees: 2000
     },
     Emma: {
@@ -111,5 +111,5 @@ export const templates: Record<string, Character>  = {
         circumstance: "while analyzing fiscal quarter financial trends",
         passing_percentage: 100,
         employees: 2500
-    }
-}
+    }*/
+} 

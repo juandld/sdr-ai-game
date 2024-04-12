@@ -120,11 +120,11 @@
 	<div>
 		<ResponseText />
 	</div>
-	<div class="flex">
+	<!-- <div class="flex">
 		{#if $isOpen}
 			<SoundCircles {stream} />
 		{/if}
-	</div>
+	</div> -->
 	<br />
 	<div class="card variant-ghost-success shadow-md rounded p-4 w-[90%]">
 		<p class="text-xl font-semibold">{$characterStore.fullName}</p>
