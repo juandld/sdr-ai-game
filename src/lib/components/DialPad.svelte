@@ -120,7 +120,9 @@
 	<div>
 		<ResponseText />
 	</div>
-	<!-- <div class="flex">
+	
+	<!-- Todo: visual indicator that sound is being recorded and should also be heard.
+	<div class="flex">
 		{#if $isOpen}
 			<SoundCircles {stream} />
 		{/if}

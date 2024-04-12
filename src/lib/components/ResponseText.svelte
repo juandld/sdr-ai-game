@@ -29,7 +29,7 @@
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				character: $characterStore,
-				conversation: $convoStore
+				chat: $convoStore
 			})
 		};
 
