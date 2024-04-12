@@ -3,7 +3,7 @@
 	import type { DrawerSettings } from '@skeletonlabs/skeleton';
 	import { characterStore } from '$lib/stores/character';
 	import type { Character } from '$lib/interfaces/Character';
-	import { templates } from '$lib/prompts/characterTemplates';
+	import { templates } from '$lib/server/prompts/characterTemplates';
 
 	const drawerStore = getDrawerStore();
 
