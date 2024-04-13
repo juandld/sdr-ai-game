@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
 
 type Message = {
-    message: string;
     tag: string;
+    content: string;
    };
 
 export const transcriptStore = writable({});
-export const convoStore = writable<Message[]>([]);
+export const convoStore = writable<Message[]>([{tag: "AI", content: "Hello?"}]);

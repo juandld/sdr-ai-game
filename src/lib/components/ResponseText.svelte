@@ -8,12 +8,12 @@
 
 	const updateConversation = (newValue) => {
 		if (newValue.result) {
-			const message = newValue.result;
-			convoStore.update((convo) => [...convo, { tag: 'AI', message }]);
+			const content = newValue.result;
+			convoStore.update((convo) => [...convo, { tag: 'AI', content }]);
 		}
 		if (newValue.input) {
-			const message = newValue.input;
-			convoStore.update((convo) => [...convo, { tag: 'Human', message }]);
+			const content = newValue.input;
+			convoStore.update((convo) => [...convo, { tag: 'Human', content }]);
 		}
 		console.log($convoStore);
 	};
@@ -21,7 +21,6 @@
 	const unsubscribe = transcriptStore.subscribe(updateConversation);
 
 	async function fetchPosts() {
-		console.log({ body: { character: $characterStore, conversation: { $convoStore } } });
 
 		// Prepare the request options
 		const requestOptions = {
