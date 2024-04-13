@@ -1,12 +1,6 @@
 // Library imports
-import { BufferMemory } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
-
-// Core imports
-import { genCalls } from '$lib/server/chains/dynamicCall';
-import { genChatHistory } from '$lib/server/util/chatHistory'
-import { conversationTemplates } from '$lib/server/prompts/mainPrompts'
 
 // Main chat llm
 const chatLlm = new ChatOpenAI({
@@ -20,10 +14,10 @@ const chatLlm = new ChatOpenAI({
 // Generate all calls on mount, ready to use for performance
 
 // Main function set
-export const genMainChain = async (chatHistory, chatTemplate) => {
+export const genMainChain = async (chatTemplate, bufferMemory) => {
 
     const mainChain = new ConversationChain({
-        memory: new BufferMemory({ returnMessages: true, memoryKey: "history", chatHistory }),
+        memory: bufferMemory,
         prompt: chatTemplate,
         llm: chatLlm,
     });

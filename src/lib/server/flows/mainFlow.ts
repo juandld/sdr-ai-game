@@ -1,20 +1,21 @@
 import { genCalls } from "../chains/dynamicCall";
 import { genMainChain } from "../chains/mainChain";
-import { genChatHistory } from "../util/chatHistory";
+import { genBufferMemory } from "../util/bufferMemory";
 import { conversationTemplates } from "../prompts/mainPrompts";
 
 
 export const starterConvo = async (data: any) => {
     // Generate chatHistory in Lanchain format for main chat injection.
-    const { chatHistory, chatTemplate } = await genChatHistory(data.character, data.chat);
+    const { chatTemplate, bufferMemory } = await genBufferMemory(data.character, data.chat);
+    
     // Generate main chat callable llm
-    const mainChain = await genMainChain(chatHistory, chatTemplate);
+    const mainChain = await genMainChain(chatTemplate, bufferMemory);
     // Generate calls with core templates
     const decisionCalls = genCalls(conversationTemplates);
 
-    const latestHMessage = data.chat[data.chat.length - 1].message;
+    const latestHMessage = data.chat[data.chat.length - 1].content;
     // Fallback
-    let response = "Sorry, I can't hear you, maybe try again later?"
+    let response;
 
     const [coherenceRaw, stageRaw] = await Promise.all([
         // Veriify chat coherence to make sure human is not messing with AI
@@ -27,7 +28,7 @@ export const starterConvo = async (data: any) => {
     const stage = Number(stageRaw.match(/\d+/)[0]);   
 
     if (coherence == 1){
-        response = await mainChain.invoke(latestHMessage);
+        response = await mainChain.invoke({input: latestHMessage});
     }else {
         //If cohesion good and stage is 1, invoke main chat, if not respond "I´m sorry, what?"
         response = "I'm sorry, what?"
