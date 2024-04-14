@@ -10,7 +10,7 @@ const calls: Calls = {};
 const llm = new OpenAI({
     temperature: 0,
     openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    verbose: true,
+    verbose: false,
     modelName: "gpt-3.5-turbo",
     maxTokens: 40
 });

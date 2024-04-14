@@ -4,10 +4,7 @@
 	import { listening } from '$lib/stores/states'; // The state of the AI agent listening or speaking
 	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
 	import { characterStore } from '$lib/stores/character'; // Current character
-    import { convoStore } from '$lib/stores/transcript';
-
-	import SoundCircles from './SoundCircles.svelte';
-	import ResponseText from './ResponseText.svelte';
+	import Response from './Response.svelte';
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
 
@@ -27,7 +24,7 @@
 			model: 'nova-2',
 			language: 'en-US',
 			smart_format: true,
-			utterance_end_ms: 1200, // Working on detecting end of speach to make a response in real time call
+			utterance_end_ms: 5000, // Working on detecting end of speach to make a response in real time call
 			interim_results: true // Interim results have to be enabled to use uterrenceEnd.
 		});
 
@@ -54,7 +51,6 @@
 		mediaRecorder.addEventListener('dataavailable', (event) => {
 			// Add the audio data to the queue
 			if ($isOpen) {
-				console.log('sending data');
 				connection.send(event.data);
 				const sendTime = new Date().getTime();
 			}
@@ -70,8 +66,8 @@
 					.map((alt) => alt.transcript)
 					.join(' ');
 
-				// Create the object with the concatenated string
-				$transcriptStore = { input: concatenatedTranscript };
+					// Create the object with the concatenated string
+					$transcriptStore = { input: concatenatedTranscript };
 			}
 		});
 	};
@@ -118,7 +114,7 @@
 
 <div class="flex flex-col items-center justify-center h-full">
 	<div>
-		<ResponseText />
+		<Response />
 	</div>
 	
 	<!-- Todo: visual indicator that sound is being recorded and should also be heard.
