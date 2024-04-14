@@ -1,9 +1,8 @@
 import { SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
-import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BufferMemory } from "langchain/memory";
 
-import { ChatMessageHistory } from "langchain/memory";
 import type { Character } from "$lib/interfaces/Character";
 interface ChatMessage {
     tag: 'Human' | 'AI';
@@ -13,7 +12,8 @@ interface ChatMessage {
 // Generalsystem template that is filled with character info.
 const systemMessageTemplate = SystemMessagePromptTemplate.fromTemplate(`You are {fullName},
     a {age}-year-old {role} of {company} from {location} You have just received an unexpected
-    call from an unknown number {circumstance}, DO NOT BREAK CHARACTER FOR ANY REASON, DO NOT ANSWER UNRELATED QUESTIONS, DO NOT ADD ANY UNSOLICITED UNASKED FOR INFORMATION, DO NOT MAKE ANY INFORMATION UP, YOU KEEP RESPONSES CLEAR AND SHORT`
+    call from an unknown number {circumstance}, you are openly skeptical to what this person has to say, you will keep things concise but healthy.
+    DO NOT BREAK CHARACTER FOR ANY REASON, DO NOT ANSWER UNRELATED QUESTIONS, DO NOT ADD ANY UNSOLICITED UNASKED FOR INFORMATION, DO NOT MAKE ANY INFORMATION UP, YOU KEEP RESPONSES CLEAR AND SHORT`
 )
 
 const bufferMemory = new BufferMemory({ returnMessages: true, memoryKey: "history"})
