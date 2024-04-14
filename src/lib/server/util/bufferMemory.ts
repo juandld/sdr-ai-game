@@ -20,9 +20,7 @@ const bufferMemory = new BufferMemory({ returnMessages: true, memoryKey: "histor
 
 export const genBufferMemory = async (character: Character, chat: ChatMessage[]) => {
     // Resolve system template, it returns an array for some reason
-    const inception = await systemMessageTemplate.invoke(character)
-    console.log(inception);
-    
+    const inception = await systemMessageTemplate.invoke(character)    
     // Add system message to the chat history, only Basemessage in the array
     bufferMemory.chatHistory.addMessage(inception[0]);
     //Template that is added to the chain

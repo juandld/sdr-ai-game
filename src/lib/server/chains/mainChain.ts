@@ -5,7 +5,7 @@ import { ChatOpenAI } from "@langchain/openai";
 // Main chat llm
 const chatLlm = new ChatOpenAI({
     temperature: 0.4,
-    verbose: true,
+    verbose: false,
     openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
     modelName: "gpt-3.5-turbo",
     maxTokens: 80
