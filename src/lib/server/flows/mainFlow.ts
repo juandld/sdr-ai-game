@@ -6,7 +6,7 @@ import { conversationTemplates, qualificationTemplates } from "../prompts/mainPr
 
 export const starterConvo = async (data: any) => {
     // Generate chatHistory in Lanchain format for main chat injection.
-    const { chatTemplate, bufferMemory } = await genBufferMemory(data.character, data.chat);
+    const { chatTemplate, bufferMemory } = await genBufferMemory(data.character, data.chat);    
 
     // Generate main chat callable llm
     const mainChain = await genMainChain(chatTemplate, bufferMemory);
@@ -20,11 +20,13 @@ export const starterConvo = async (data: any) => {
     let response = "I'm sorry, cant hear you, maybe try later?";
 
     // AI decides coherence and stage of conversation.
+    console.log(data.chat);
+    
     const [coherenceRaw, stageRaw] = await Promise.all([
         // Veriify chat coherence to make sure human is not messing with AI
-        decisionCalls['resolveCohesion']({ chatHistory: JSON.stringify(data.chat) }),
+        decisionCalls['resolveCohesion']({ chatHistory: JSON.stringify(data.chat)}),
         // Verify chat stage, to resolve progression and also further coherence down the line
-        decisionCalls['identifyCurrentPhase']({ chatHistory: JSON.stringify(data.chat) }),
+        decisionCalls['identifyCurrentPhase']({ chatHistory: JSON.stringify(data.chat)}),
     ]);
     
     // Extract decision enums

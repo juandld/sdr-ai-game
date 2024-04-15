@@ -89,7 +89,9 @@
 		const response = await fetch('/api/response', requestOptions);
 		text = await response.json(); // Extract the text from the response
 		updateConversation(text);
-		await playAudio(text.result.response);
+		//await playAudio(text.result.response);
+		console.log(text);
+		
 	}
 
 	let isFirstCall = true;
