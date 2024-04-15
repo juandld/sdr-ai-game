@@ -63,8 +63,8 @@
 	}
 
 	const updateConversation = (newValue) => {
-		if (newValue.result) {
-			const content = newValue.result;
+		if (newValue.response) {
+			const content = newValue.response;
 			convoStore.update((convo) => [...convo, { tag: 'AI', content }]);
 		}
 		if (newValue.input) {
@@ -88,9 +88,9 @@
 		// Send the POST request
 		const response = await fetch('/api/response', requestOptions);
 		text = await response.json(); // Extract the text from the response
-		updateConversation(text);
+		updateConversation(text.result);
 		//await playAudio(text.result.response);
-		console.log(text);
+		console.log(text.result);
 		
 	}
 

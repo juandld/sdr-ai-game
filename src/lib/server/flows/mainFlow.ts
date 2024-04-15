@@ -19,9 +19,7 @@ export const starterConvo = async (data: any) => {
     // Fallback
     let response = "I'm sorry, cant hear you, maybe try later?";
 
-    // AI decides coherence and stage of conversation.
-    console.log(data.chat);
-    
+    // AI decides coherence and stage of conversation.    
     const [coherenceRaw, stageRaw] = await Promise.all([
         // Veriify chat coherence to make sure human is not messing with AI
         decisionCalls['resolveCohesion']({ chatHistory: JSON.stringify(data.chat)}),
