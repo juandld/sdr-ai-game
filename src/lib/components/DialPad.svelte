@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
+	import { convoStore } from '$lib/stores/transcript';
 	import { transcriptStore } from '$lib/stores/transcript'; // Current transcript data that other modules and components will use
 	import { listening } from '$lib/stores/states'; // The state of the AI agent listening or speaking
 	import { isOpen } from '$lib/stores/states'; // State of deepgram API WS connection
 	import { characterStore } from '$lib/stores/character'; // Current character
+	import {fetchFinalScore} from '$lib/util/finalScore'
 	import Response from './Response.svelte';
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
@@ -12,7 +14,15 @@
 	let connection: any;
 	let mediaRecorder;
 	let stream;
+	let scores = [];
+	let averageScore;
+	
 	//let audioChunks = []; // Array to store audio data chunks to play in case of audio quality issues
+	const scoreFunction = async () => {
+		const result = await fetchFinalScore($convoStore)
+		scores = result.result;
+		averageScore = scores.pop()
+	}
 
 	const startCall = async () => {
 		// Get mic permission and start recording
@@ -38,6 +48,7 @@
 		connection.on(LiveTranscriptionEvents.Close, () => {
 			$isOpen = false;
 			console.log('Connection closed.');
+			scoreFunction()
 		});
 
 		connection.on(LiveTranscriptionEvents.Error, (err) => {
@@ -132,12 +143,20 @@
 	</div> -->
 	<br />
 	<div class="card variant-ghost-success shadow-md rounded p-4 w-[90%]">
-		<p class="text-xl font-semibold">{$characterStore.fullName}</p>
-		<p class="text-lg">Age: {$characterStore.age}</p>
-		<p class="text-lg">Role: {$characterStore.role}</p>
-		<p class="text-lg">Company: {$characterStore.company}</p>
-		<p class="text-lg">Location: {$characterStore.location}</p>
-		<p class="text-lg">Employees: {$characterStore.employees}</p>
+
+		{#if scores.length === 0}
+			<p class="text-xl font-semibold">{$characterStore.fullName}</p>
+			<p class="text-lg">Age: {$characterStore.age}</p>
+			<p class="text-lg">Role: {$characterStore.role}</p>
+			<p class="text-lg">Company: {$characterStore.company}</p>
+			<p class="text-lg">Location: {$characterStore.location}</p>
+			<p class="text-lg">Employees: {$characterStore.employees}</p>
+		{:else}
+			{#each scores as score}
+				<p>{score}</p>
+			{/each}
+			<h3 class="h3">Your average score was {averageScore} out of 5</h3>
+		{/if}
 	</div>
 	<br />
 	<div>

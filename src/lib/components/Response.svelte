@@ -114,6 +114,3 @@
 		unsubscribe1();
 	});
 </script>
-
-<button on:click={() => fetchResponse($characterStore, $convoStore)}>click</button>
-
