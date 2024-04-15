@@ -4,24 +4,26 @@ import type { Character } from '$lib/interfaces/Character';
 export const templates: Record<string, Character>  = {
     Mary: {
         fullName: "Mary Johnson",
+        voice: "gEaDBQczhgo8x4h84x5Z",
         age: "55",
         role: "Small business owner",
         company: "Johnson Health Insurance Inc.",
         location: "Cleveland, Ohio",
         circumstance: "while in the middle of reviewing a client's insurance policy",
-        passing_percentage: 25,
+        passing_percentage: 10,
         employees: 30
     },
     John: {
         fullName: "John Smith",
+        voice: "j9jfwdrw7BRfcR43Qohk",
         age: "45",
         role: "Small Business Owner",
         company: "Altech Gadget Store",
         location: "Austin, Texas",
         circumstance: "while restocking the storefront",
-        passingPercentage: 35,
+        passing_percentage: 25,
         employees: 100
-    },
+    }/* ,
     Samantha: {
         fullName: "Samantha White",
         age: "40",
@@ -69,7 +71,7 @@ export const templates: Record<string, Character>  = {
         company: "Starshine Cosmetics",
         location: "Los Angeles, California",
         circumstance: "while overseeing a product photoshoot",
-        passingPercentage: 80,
+        passing_percentage: 80,
         employees: 1000
     },
     Frank: {
@@ -99,7 +101,7 @@ export const templates: Record<string, Character>  = {
         company: "TechWorld Innovations",
         location: "San Francisco, California",
         circumstance: "while at a tech innovation summit",
-        passingPercentage: 95,
+        passing_percentage: 95,
         employees: 2000
     },
     Emma: {
@@ -111,5 +113,5 @@ export const templates: Record<string, Character>  = {
         circumstance: "while analyzing fiscal quarter financial trends",
         passing_percentage: 100,
         employees: 2500
-    }
-}
+    }*/
+} 

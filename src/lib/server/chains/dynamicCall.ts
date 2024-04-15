@@ -12,7 +12,7 @@ const llm = new OpenAI({
     openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
     verbose: false,
     modelName: "gpt-3.5-turbo",
-    maxTokens: 80
+    maxTokens: 40
 });
 
 export const genCalls = (templates: { [key: string]: string }) => {
@@ -26,4 +26,4 @@ export const genCalls = (templates: { [key: string]: string }) => {
     }
   
     return calls;
-  }
+}

@@ -1,5 +1,6 @@
 export interface Character {
     fullName: string;
+    voice: string;
     age: string;
     role: string;
     company: string;
