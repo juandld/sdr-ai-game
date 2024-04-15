@@ -5,10 +5,10 @@ import { ChatOpenAI } from "@langchain/openai";
 // Main chat llm
 const chatLlm = new ChatOpenAI({
     temperature: 0.3,
-    verbose: false,
+    verbose: true,
     openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
     modelName: "gpt-3.5-turbo",
-    maxTokens: 80
+    maxTokens: 4096
 });
 
 // Generate all calls on mount, ready to use for performance

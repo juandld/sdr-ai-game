@@ -9,7 +9,7 @@ export const templates: Record<string, Character>  = {
         company: "Johnson Health Insurance Inc.",
         location: "Cleveland, Ohio",
         circumstance: "while in the middle of reviewing a client's insurance policy",
-        passing_percentage: 25,
+        passing_percentage: 10,
         employees: 30
     },
     John: {
@@ -19,7 +19,7 @@ export const templates: Record<string, Character>  = {
         company: "Altech Gadget Store",
         location: "Austin, Texas",
         circumstance: "while restocking the storefront",
-        passing_percentage: 35,
+        passing_percentage: 25,
         employees: 100
     }/* ,
     Samantha: {

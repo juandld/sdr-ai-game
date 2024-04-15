@@ -72,7 +72,9 @@
 			const content = newValue.input;
 			$convoStore.push({ tag: 'Human', content });
 			fetchResponse($characterStore, $convoStore);
-		}
+		}		
+		console.log($convoStore);
+		
 	};
 
 	const fetchResponse = async (character, convo) => {
@@ -92,6 +94,8 @@
 		updateConversation(text.result);
 
 		//await playAudio(text.result.response);
+		console.log(text.result.response);
+		
 	};
 
 	let isFirstCall = true;
@@ -110,4 +114,4 @@
 </script>
 
 <button on:click={() => fetchResponse($characterStore, $convoStore)}>click</button>
-<p>{text}</p>
+

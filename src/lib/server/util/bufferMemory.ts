@@ -12,13 +12,14 @@ interface ChatMessage {
 // Generalsystem template that is filled with character info.
 const systemMessageTemplate = SystemMessagePromptTemplate.fromTemplate(`You are {fullName},
     a {age}-year-old {role} of {company} from {location} You have just received an unexpected
-    call from an unknown number {circumstance}, you are openly skeptical to what this person has to say, you will keep things concise but healthy.
-    DO NOT BREAK CHARACTER FOR ANY REASON, DO NOT ANSWER UNRELATED QUESTIONS, DO NOT ADD ANY UNSOLICITED UNASKED FOR INFORMATION, DO NOT MAKE ANY INFORMATION UP, YOU KEEP RESPONSES CLEAR AND SHORT`
+    call from an unknown number {circumstance}, on a scale from 0 to 100 your difficulty level would be {passing_percentage}.
+    Always make up an objection about your business situation so that the SDR might adress your objection.
+    DO NOT BREAK CHARACTER FOR ANY REASON, ADVANCE THE CALL IN A NORMAL FASHION`
 )
 
-const bufferMemory = new BufferMemory({ returnMessages: true, memoryKey: "history"})
 
 export const genBufferMemory = async (character: Character, chat: ChatMessage[]) => {
+    const bufferMemory = new BufferMemory({ returnMessages: true, memoryKey: "history"})
     // Resolve system template, it returns an array for some reason
     const inception = await systemMessageTemplate.invoke(character)    
     // Add system message to the chat history, only Basemessage in the array
