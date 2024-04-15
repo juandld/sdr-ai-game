@@ -16,8 +16,7 @@
 	let stream;
 	let scores = [];
 	let averageScore;
-	
-	//let audioChunks = []; // Array to store audio data chunks to play in case of audio quality issues
+
 	const scoreFunction = async () => {
 		const result = await fetchFinalScore($convoStore)
 		scores = result.result;
@@ -41,13 +40,11 @@
 
 		connection.on(LiveTranscriptionEvents.Open, () => {
 			$isOpen = true;
-			console.log('Connection opened.');
 			// Once the connection is open, send all the collected audio data
 		});
 
 		connection.on(LiveTranscriptionEvents.Close, () => {
 			$isOpen = false;
-			console.log('Connection closed.');
 			scoreFunction()
 		});
 
@@ -78,6 +75,13 @@
 			// Reset the store, sending algo will not send when empty.
 			intermResults = [];
 			$transcriptStore = {};
+
+			// Using an <audio> element
+			const url = "./ding.mp3"
+			const audioElement = document.createElement('audio');
+			audioElement.src = url;
+			document.body.appendChild(audioElement);
+			audioElement.play();
 		});
 
 		mediaRecorder.addEventListener('dataavailable', (event) => {
@@ -86,12 +90,10 @@
 				connection.send(event.data);
 				const sendTime = new Date().getTime();
 			}
-			//audioChunks.push(event.data); // Collect audio data chunks
 		});
 	};
 
 	const stopCall = async () => {
-		console.log('stoping by change value');
 
 		connection.finish();
 		mediaRecorder.stop();
@@ -101,28 +103,11 @@
 			track.stop();
 			track.enabled = false;
 		});
-
-		/* Audio tester functionality
-		// Create a Blob from the collected audio data chunks
-		const blob = new Blob(audioChunks, { type: 'audio/webm' });
-		// Create an audio element and set its source to the Blob
-		const audioElement = new Audio(URL.createObjectURL(blob));
-		// Play the audio
-		audioElement.play();
-
-		// Add an event listener for the 'ended' event to reset the audio chunks and Blob
-		audioElement.addEventListener('ended', () => {
-			// Reset the audio chunks array
-			audioChunks = [];
-			// Optionally, reset other variables or elements here
-			console.log('Audio playback ended. Resetting audio chunks.');
-		}); */
 	};
 
 	// Function to execute when the store's value changes
 	const callToggle = (value) => {
 		if (!value) {
-			console.log('starting by change value');
 			startCall();
 		} else {
 			stopCall();
@@ -135,12 +120,6 @@
 		<Response />
 	</div>
 
-	<!-- Todo: visual indicator that sound is being recorded and should also be heard.
-	<div class="flex">
-		{#if $isOpen}
-			<SoundCircles {stream} />
-		{/if}
-	</div> -->
 	<br />
 	<div class="card variant-ghost-success shadow-md rounded p-4 w-[90%]">
 
