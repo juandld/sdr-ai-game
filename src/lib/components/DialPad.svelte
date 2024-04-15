@@ -34,7 +34,7 @@
 			model: 'nova-2',
 			language: 'en-US',
 			smart_format: true,
-			utterance_end_ms: 1500, // Working on detecting end of speach to make a response in real time call
+			utterance_end_ms: 1000, // Working on detecting end of speach to make a response in real time call
 			interim_results: true // Interim results have to be enabled to use uterrenceEnd.
 		});
 
