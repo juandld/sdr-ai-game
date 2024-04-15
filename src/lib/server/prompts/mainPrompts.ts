@@ -21,6 +21,8 @@ export const conversationTemplates = {
     ---
     Respond only with a short reasoning and the number representing the score.
     FORMAT EXAMPLE: commitment phase because the human is asking for the propsect to make sure he shows up to the meeting because ... 1
+    Always include the number, that is the most important, that is how the response is extracted
+
 `,
     "resolveCohesion": `
     Based on this conversation: {chatHistory} 
@@ -33,6 +35,7 @@ export const conversationTemplates = {
     ---
     respond with a short explination as to why and the number that represents the option, nothing more.
     FORMAT EXAMPLE: It does make sense that in a call somone would ... 1
+    Always include the number, that is the most important, that is how the response is extracted
     `
 }
 

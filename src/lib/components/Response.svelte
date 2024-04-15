@@ -2,15 +2,17 @@
 	import { onDestroy } from 'svelte';
 	import { characterStore } from '$lib/stores/character';
 	import { convoStore, transcriptStore } from '$lib/stores/transcript';
+	import { voiceGeneration } from 'elevenlabs/api';
 
 	let stream;
 	let text;
 
-	async function fetchAudioStream(text: String) {
+	async function fetchAudioStream(text: string) {
+		const voice = $characterStore.voice 
 		const response = await fetch('/api/audio', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(text)
+			body: JSON.stringify({text, voice})
 		});
 
 		if (!response.ok) {
@@ -93,7 +95,7 @@
 		text = await response.json(); // Extract the text from the response
 		updateConversation(text.result);
 
-		//await playAudio(text.result.response);
+		await playAudio(text.result.response);
 		console.log(text.result.response);
 		
 	};

@@ -4,6 +4,7 @@ import type { Character } from '$lib/interfaces/Character';
 export const templates: Record<string, Character>  = {
     Mary: {
         fullName: "Mary Johnson",
+        voice: "gEaDBQczhgo8x4h84x5Z",
         age: "55",
         role: "Small business owner",
         company: "Johnson Health Insurance Inc.",
@@ -14,6 +15,7 @@ export const templates: Record<string, Character>  = {
     },
     John: {
         fullName: "John Smith",
+        voice: "j9jfwdrw7BRfcR43Qohk",
         age: "45",
         role: "Small Business Owner",
         company: "Altech Gadget Store",
