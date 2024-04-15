@@ -65,23 +65,24 @@
 	const updateConversation = (newValue) => {
 		if (newValue.response) {
 			const content = newValue.response;
-			convoStore.update((convo) => [...convo, { tag: 'AI', content }]);
+			$convoStore.push({ tag: 'AI', content });
+
 		}
 		if (newValue.input) {
 			const content = newValue.input;
-			convoStore.update((convo) => [...convo, { tag: 'Human', content }]);
+			$convoStore.push({ tag: 'Human', content });
+			fetchResponse($characterStore, $convoStore);
 		}
-		console.log($convoStore);
 	};
 
-	async function fetchResponse() {
+	const fetchResponse = async (character, convo) => {
 		// Prepare the request options
 		const requestOptions = {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				character: $characterStore,
-				chat: $convoStore
+				character: character,
+				chat: convo
 			})
 		};
 
@@ -89,30 +90,24 @@
 		const response = await fetch('/api/response', requestOptions);
 		text = await response.json(); // Extract the text from the response
 		updateConversation(text.result);
+
 		//await playAudio(text.result.response);
-		console.log(text.result);
-		
-	}
+	};
 
 	let isFirstCall = true;
 
 	const unsubscribe1 = transcriptStore.subscribe((value) => {
-		updateConversation(value);
-	});
-
-	const unsubscribe2 = transcriptStore.subscribe(() => {
 		if (isFirstCall) {
 			isFirstCall = false;
 			return;
 		}
-		fetchResponse();
+		updateConversation(value);
 	});
 
 	onDestroy(() => {
 		unsubscribe1();
-		unsubscribe2();
 	});
 </script>
 
-<button on:click={() => fetchResponse()}>click</button>
+<button on:click={() => fetchResponse($characterStore, $convoStore)}>click</button>
 <p>{text}</p>
