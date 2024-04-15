@@ -2,7 +2,6 @@
 	import { onDestroy } from 'svelte';
 	import { characterStore } from '$lib/stores/character';
 	import { convoStore, transcriptStore } from '$lib/stores/transcript';
-	import { voiceGeneration } from 'elevenlabs/api';
 
 	let stream;
 	let text;
@@ -74,9 +73,7 @@
 			const content = newValue.input;
 			$convoStore.push({ tag: 'Human', content });
 			fetchResponse($characterStore, $convoStore);
-		}		
-		console.log($convoStore);
-		
+		}				
 	};
 
 	const fetchResponse = async (character, convo) => {
@@ -95,9 +92,7 @@
 		text = await response.json(); // Extract the text from the response
 		updateConversation(text.result);
 
-		await playAudio(text.result.response);
-		console.log(text.result.response);
-		
+		await playAudio(text.result.response);		
 	};
 
 	let isFirstCall = true;
