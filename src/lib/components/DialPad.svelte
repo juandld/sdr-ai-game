@@ -45,7 +45,8 @@
 
 		connection.on(LiveTranscriptionEvents.Close, () => {
 			$isOpen = false;
-			scoreFunction()
+			scoreFunction();
+			$convoStore = [];
 		});
 
 		connection.on(LiveTranscriptionEvents.Error, (err) => {
