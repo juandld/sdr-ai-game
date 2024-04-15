@@ -8,6 +8,7 @@
 
 	const deepgram = createClient(import.meta.env.VITE_DEEPGRAM_API_KEY);
 
+	let intermResults:[] = [];
 	let connection: any;
 	let mediaRecorder;
 	let stream;
@@ -24,7 +25,7 @@
 			model: 'nova-2',
 			language: 'en-US',
 			smart_format: true,
-			utterance_end_ms: 5000, // Working on detecting end of speach to make a response in real time call
+			utterance_end_ms: 1000, // Working on detecting end of speach to make a response in real time call
 			interim_results: true // Interim results have to be enabled to use uterrenceEnd.
 		});
 
@@ -43,8 +44,29 @@
 			console.error(err);
 		});
 
+		// When the deepGram server responds with our results
+		connection.on(LiveTranscriptionEvents.Transcript, (data) => {
+			$listening = true;
+			// If the transcript data is not intermediate results, insert to the store array
+			if (data.is_final && data.channel.alternatives[0].transcript !== '') {
+				let concatenatedTranscript = data.channel.alternatives
+					.map((alt) => alt.transcript)
+					.join(' ');
+				// Create the object with the concatenated string
+				//intermResults = { input: concatenatedTranscript };
+				console.log(concatenatedTranscript);
+				intermResults.push(concatenatedTranscript);
+			}
+		});
+
 		connection.on(LiveTranscriptionEvents.UtteranceEnd, () => {
-			$listening = false;			
+			$listening = false;
+			// Concatenate all strings in intermResults into a single string, separated by a period and a space.
+			let wholeStringWellSeparated = intermResults.join('. ');
+			// Set the transcript store with the concatenated string.
+			$transcriptStore = { input: wholeStringWellSeparated };
+			// Reset the store, sending algo will not send when empty.
+			intermResults = [];
 			$transcriptStore = {};
 		});
 
@@ -55,20 +77,6 @@
 				const sendTime = new Date().getTime();
 			}
 			//audioChunks.push(event.data); // Collect audio data chunks
-		});
-
-		// When the deepGram server responds with our results
-		connection.on(LiveTranscriptionEvents.Transcript, (data) => {
-			$listening = true;
-			// If the transcript data is not intermediate results, insert to the store array
-			if (data.is_final && data.channel.alternatives[0].transcript !== '') {
-				let concatenatedTranscript = data.channel.alternatives
-					.map((alt) => alt.transcript)
-					.join(' ');
-
-					// Create the object with the concatenated string
-					$transcriptStore = { input: concatenatedTranscript };
-			}
 		});
 	};
 
@@ -116,7 +124,7 @@
 	<div>
 		<Response />
 	</div>
-	
+
 	<!-- Todo: visual indicator that sound is being recorded and should also be heard.
 	<div class="flex">
 		{#if $isOpen}
