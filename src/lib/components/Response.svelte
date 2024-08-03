@@ -91,7 +91,8 @@
 		const response = await fetch('/api/response', requestOptions);
 		text = await response.json(); // Extract the text from the response
 		updateConversation(text.result);
-
+		console.log(text.result.response);
+		
 		await playAudio(text.result.response);		
 	};
 
